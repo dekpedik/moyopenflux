@@ -119,12 +119,12 @@ jobs:
           echo "======================================"
           echo "Starting OpenFlux"
           echo "Mode: proxy"
-          echo "Transport: yandex"
+          echo "Transport: vyandex"
           echo "URL: configured (hidden)"
           echo "Debug: disabled"
           echo "======================================"
 
           exec sudo ./universal-bypass-tool \
             --exit-node \
-            --transport yandex \
+            --transport vyandex \
             --url "$YANDEX_DOC_URL"
