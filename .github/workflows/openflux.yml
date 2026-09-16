@@ -40,9 +40,12 @@ jobs:
         shell: bash
         run: |
           set +x
-
-          git clone --depth 1 https://github.com/p1neappleXpress/OpenFlux.git
+          git clone https://github.com/p1neappleXpress/OpenFlux.git
           cd OpenFlux
+
+          # OpenFlux Android v0.6.0 был синхронизирован
+          # с upstream-состоянием от 2026-09-12.
+          git log --oneline --all --since="2026-09-12 00:00:00" --until="2026-09-13 00:00:00"
 
           echo "OpenFlux commit:"
           git rev-parse --short HEAD
@@ -90,35 +93,12 @@ jobs:
             -p tcp \
             --tcp-flags RST RST \
             -j DROP
-          echo "RST DROP rule configured."
-          sudo python3 - <<'PY'
-          import socket
-
-          try:
-              s = socket.socket(
-                  socket.AF_INET,
-                  socket.SOCK_RAW,
-                  socket.IPPROTO_TCP
-              )
-              s.close()
-              print("RAW SOCKET: OK")
-          except Exception as e:
-              print(f"RAW SOCKET: FAILED: {type(e).__name__}: {e}")
-          PY
 
       - name: Start OpenFlux
         shell: bash
         run: |
           set +x
           cd OpenFlux
-          echo "======================================"
-          echo "Starting OpenFlux"
-          echo "Role: exit"
-          echo "Mode: l3"
-          echo "Transport: vyandex"
-          echo "URL: configured (hidden)"
-          echo "Debug: enabled"
-          echo "======================================"
           exec sudo ./universal-bypass-tool \
             --role=exit \
             --mode=l3 \
