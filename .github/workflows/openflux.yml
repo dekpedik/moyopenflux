@@ -78,6 +78,19 @@ jobs:
         run: |
           set +x
 
+      - name: Configure iptables
+        shell: bash
+        run: |
+          set +x
+          sudo iptables -C OUTPUT \
+            -p tcp \
+            --tcp-flags RST RST \
+            -j DROP 2>/dev/null || \
+          sudo iptables -A OUTPUT \
+            -p tcp \
+            --tcp-flags RST RST \
+            -j DROP
+          echo "RST DROP rule configured."
           sudo python3 - <<'PY'
           import socket
 
@@ -101,14 +114,14 @@ jobs:
           echo "======================================"
           echo "Starting OpenFlux"
           echo "Role: exit"
-          echo "Mode: proxy"
+          echo "Mode: l3"
           echo "Transport: vyandex"
           echo "URL: configured (hidden)"
           echo "Debug: enabled"
           echo "======================================"
           exec sudo ./universal-bypass-tool \
             --role=exit \
-            --mode=proxy \
+            --mode=l3 \
             --transport=vyandex \
             --url="$YANDEX_DOC_URL" \
             --debug
